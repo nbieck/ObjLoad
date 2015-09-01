@@ -28,3 +28,7 @@
 *.app
 
 #extra
+*.sdf
+*.opensdf
+*.swp
+.vs
