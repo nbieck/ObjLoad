@@ -18,7 +18,9 @@ int main(void)
 	std::cout << "Vertices:" << std::endl;
 	for (auto v : vertices)
 	{
-		std::cout << "Pos:\t" << v.position << "\tUV:\t" << v.tex_coord << "\tNorm:\t" << v.normal << std::endl;
+		std::cout << "Pos: (" << v.position.x() << "," << v.position.y() << "," << v.position.z() << ")";
+		std::cout << "\tUV: (" << v.tex_coord.x() << "," << v.tex_coord.y() << ")";
+		std::cout << "\tNorm: (" << v.normal.x() << "," << v.normal.y() << "," << v.normal.z() << ")" << std::endl;
 	}
 
 	std::cout << "Indices:" << std::endl;
