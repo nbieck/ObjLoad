@@ -8,6 +8,8 @@
 #include <fstream>
 #include <string>
 
+#include <Eigen\Dense>
+
 //to allow for easy replacing of used types
 namespace ObjLoadTypes
 {
@@ -18,15 +20,9 @@ namespace ObjLoadTypes
 
 	using String = std::string;
 
-	struct Vec3
-	{
-		float x, y, z;
-	};
+	using Vec3 = Eigen::Vector3f;
 
-	struct Vec2
-	{
-		float x, y;
-	};
+	using Vec2 = Eigen::Vector2f;
 }
 
 class ObjLoader
