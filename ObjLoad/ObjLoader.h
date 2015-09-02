@@ -8,7 +8,7 @@
 #include <fstream>
 #include <string>
 
-//to easily replace stl types if necessary
+//to allow for easy replacing of used types
 namespace ObjLoadTypes
 {
 	using InFile = std::ifstream;
@@ -27,27 +27,27 @@ namespace ObjLoadTypes
 	{
 		float x, y;
 	};
-
-	struct Vertex
-	{
-		Vec3 position;
-		Vec2 tex_coord;
-		Vec3 normal;
-	};
-
-	using Index = unsigned;
 }
 
 class ObjLoader
 {
 public:
 
+	struct Vertex
+	{
+		ObjLoadTypes::Vec3 position;
+		ObjLoadTypes::Vec2 tex_coord;
+		ObjLoadTypes::Vec3 normal;
+	};
+
+	using Index = unsigned;
+
 	//takes the given file and reads the contained mesh data.
 	// the results are returned in the two out_* containers.
 	//no checking is done that the file is actually a valid .obj, this is simply assumed
 	void Load(ObjLoadTypes::String file_path, 
-			  ObjLoadTypes::Container<ObjLoadTypes::Vertex>& out_vertices, 
-			  ObjLoadTypes::Container<ObjLoadTypes::Index>& out_indices);
+			  ObjLoadTypes::Container<Vertex>& out_vertices, 
+			  ObjLoadTypes::Container<Index>& out_indices);
 
 private:
 
