@@ -32,3 +32,5 @@
 *.opensdf
 *.swp
 .vs
+Debug/
+Release/
