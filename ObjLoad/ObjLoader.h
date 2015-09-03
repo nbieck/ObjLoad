@@ -55,6 +55,14 @@ public:
 
 private:
 
+	//.obj specifies different pieces of vertex data separately and can index them separately.
+	//these serve as intermediate storage
+	ObjLoadTypes::Container<ObjLoadTypes::Vec3> positions_;
+	ObjLoadTypes::Container<ObjLoadTypes::Vec2> uvs_;
+	ObjLoadTypes::Container<ObjLoadTypes::Vec3> normals_;
+
+	//this class will help us get the correct indices for our actual complete vertices
+	//it also provides us with the full list of unique vertices at the end
 	class LoadHelper
 	{
 	public:
@@ -75,4 +83,6 @@ private:
 
 	} helper_;
 
+	//these are the actual indices for our mesh that go together with the vertices returned by LoadHelper
+	ObjLoadTypes::Container<Index> indices_;
 };
