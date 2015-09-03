@@ -85,10 +85,39 @@ void ObjLoader::ReadFace(OLT::StringStream & line)
 			break;
 
 		int pos_idx = std::stoi(block);
-		Vertex vtx = { positions_[pos_idx - 1], OLT::Vec2(), OLT::Vec3() };
-
-		indices_.push_back(helper_.GetIndexByVertex(vtx));
+		indices_.push_back(helper_.GetIndexByVertex(MakeVertex(pos_idx, 0, 0)));
 	}
+}
+
+ObjLoader::Vertex ObjLoader::MakeVertex(int pos_idx, int uv_idx, int normal_idx)
+{
+	Vertex vtx;
+
+	int num_pos = positions_.size();
+	if (pos_idx > 0 && pos_idx <= num_pos)
+		vtx.position = positions_[pos_idx - 1];
+	else if (pos_idx < 0 && pos_idx >= -num_pos)
+		vtx.position = positions_[num_pos - pos_idx];
+	else
+		vtx.position = OLT::Vec3(0, 0, 0);
+
+	int num_uv = uvs_.size();
+	if (uv_idx > 0 && uv_idx <= num_uv)
+		vtx.tex_coord = uvs_[uv_idx - 1];
+	else if (uv_idx < 0 && uv_idx >= -num_uv)
+		vtx.tex_coord = uvs_[num_uv - uv_idx];
+	else
+		vtx.tex_coord = OLT::Vec2(0, 0);
+
+	int num_normal = normals_.size();
+	if (normal_idx > 0 && normal_idx <= num_normal)
+		vtx.normal = normals_[normal_idx - 1];
+	else if (normal_idx < 0 && normal_idx >= -num_normal)
+		vtx.normal = normals_[num_normal - normal_idx];
+	else
+		vtx.normal = OLT::Vec3(0, 0, 0);
+
+	return vtx;
 }
 
 bool ObjLoader::Vertex::operator<(const Vertex & rhs) const

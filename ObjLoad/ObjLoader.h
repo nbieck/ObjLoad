@@ -62,6 +62,12 @@ private:
 
 	void ReadFace(ObjLoadTypes::StringStream& line);
 
+	//this will construct a vertex from values looked up from the individual storage containers
+	//a positive index is interpreted as a 1-based absolute index
+	//a negative index is interpreted as an offset from the back, where -1 is the last element
+	//passing 0, or an index that is out of bounds will result in a default value being used
+	Vertex MakeVertex(int pos_idx, int uv_idx, int normal_idx);
+
 	//.obj specifies different pieces of vertex data separately and can index them separately.
 	//these serve as intermediate storage
 	ObjLoadTypes::Container<ObjLoadTypes::Vec3> positions_;
