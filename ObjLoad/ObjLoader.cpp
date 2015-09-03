@@ -36,9 +36,9 @@ void ObjLoader::Load(OLT::String file_path, OLT::Container<Vertex>& out_vertices
 			if (token.compare("v") == 0)
 				ReadPosition(linestream);
 			else if (token.compare("vt") == 0)
-				;//uv
+				ReadUV(linestream);
 			else if (token.compare("vn") == 0)
-				;//normal
+				ReadNormal(linestream);
 			else if (token.compare("f") == 0)
 				ReadFace(linestream);
 			//else -> ignore line
@@ -55,6 +55,20 @@ void ObjLoader::ReadPosition(OLT::StringStream & line)
 	OLT::Vec3 temp_pos;
 	line >> temp_pos.x() >> temp_pos.y() >> temp_pos.z();
 	positions_.push_back(temp_pos);
+}
+
+void ObjLoader::ReadUV(ObjLoadTypes::StringStream & line)
+{
+	OLT::Vec2 temp_uv;
+	line >> temp_uv.x() >> temp_uv.y();
+	uvs_.push_back(temp_uv);
+}
+
+void ObjLoader::ReadNormal(ObjLoadTypes::StringStream & line)
+{
+	OLT::Vec3 temp_normal;
+	line >> temp_normal.x() >> temp_normal.y() >> temp_normal.z();
+	normals_.push_back(temp_normal);
 }
 
 void ObjLoader::ReadFace(OLT::StringStream & line)

@@ -60,6 +60,10 @@ private:
 
 	void ReadPosition(ObjLoadTypes::StringStream& line);
 
+	void ReadUV(ObjLoadTypes::StringStream& line);
+
+	void ReadNormal(ObjLoadTypes::StringStream& line);
+
 	void ReadFace(ObjLoadTypes::StringStream& line);
 
 	//this will construct a vertex from values looked up from the individual storage containers
