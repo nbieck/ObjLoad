@@ -43,3 +43,22 @@ bool ObjLoader::Vertex::operator<(const Vertex & rhs)
 
 	return false;
 }
+
+OLT::Container<ObjLoader::Vertex>&& ObjLoader::LoadHelper::GetVertexList()
+{
+	return std::move(vertices_);
+}
+
+ObjLoader::Index ObjLoader::LoadHelper::GetIndexByVertex(const Vertex & v)
+{
+	//if we have this vertex before, returns its index
+	//otherwise, add it to the vertices and add it to our lookup
+	auto loc = indices_by_vertex_.find(v);
+	if (loc != indices_by_vertex_.end())
+		return loc->second;
+
+	vertices_.push_back(v);
+	indices_by_vertex_[v] = next_index_;
+
+	return next_index_++;
+}

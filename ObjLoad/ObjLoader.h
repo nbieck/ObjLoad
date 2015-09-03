@@ -7,6 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <map>
 
 #include <Eigen\Dense>
 
@@ -17,6 +18,9 @@ namespace ObjLoadTypes
 
 	template <typename T>
 	using Container = std::vector<T>;
+
+	template <typename Key, typename Val>
+	using AssocContainer = std::map<Key, Val>;
 
 	using String = std::string;
 
@@ -50,5 +54,25 @@ public:
 			  ObjLoadTypes::Container<Index>& out_indices);
 
 private:
+
+	class LoadHelper
+	{
+	public:
+
+		ObjLoadTypes::Container<Vertex>&& GetVertexList();
+
+		Index GetIndexByVertex(const Vertex& v);
+
+	private:
+
+		//we store the index of each unique vertex here
+		ObjLoadTypes::AssocContainer<Vertex, Index> indices_by_vertex_;
+		//the actual list of unique vertices
+		ObjLoadTypes::Container<Vertex> vertices_;
+
+		//the index for the next unknown vertex
+		Index next_index_;
+
+	} helper_;
 
 };
