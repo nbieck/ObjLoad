@@ -34,6 +34,9 @@ public:
 		ObjLoadTypes::Vec3 position;
 		ObjLoadTypes::Vec2 tex_coord;
 		ObjLoadTypes::Vec3 normal;
+
+		//needed to determine duplicate vertices in the data
+		bool operator<(const Vertex& rhs);
 	};
 
 	using Index = unsigned;
@@ -41,6 +44,7 @@ public:
 	//takes the given file and reads the contained mesh data.
 	// the results are returned in the two out_* containers.
 	//no checking is done that the file is actually a valid .obj, this is simply assumed
+	//if there is an error loading the file, we silently fail
 	void Load(ObjLoadTypes::String file_path, 
 			  ObjLoadTypes::Container<Vertex>& out_vertices, 
 			  ObjLoadTypes::Container<Index>& out_indices);
