@@ -22,10 +22,27 @@ void ObjLoader::Load(OLT::String file_path, OLT::Container<Vertex>& out_vertices
 		helper_ = LoadHelper();
 
 		//we go through the file line by line and then parse each line on its own
+		while (!input.eof())
+		{
+			OLT::String line;
 
-		//for lines
-			//for token at start of line
-				//choose appropriate action
+			std::getline(input, line);
+
+			//use this to make use of stream operations to get the individual tokens from the line
+			OLT::StringStream linestream(line);
+			OLT::String token;
+
+			linestream >> token;
+			if (token.compare("v") == 0)
+				ReadPosition(linestream);
+			else if (token.compare("vt") == 0)
+				;//uv
+			else if (token.compare("vn") == 0)
+				;//normal
+			else if (token.compare("f") == 0)
+				ReadFace(linestream);
+			//else -> ignore line
+		}
 
 		//last step: get results
 		out_vertices = helper_.GetVertexList();
@@ -33,7 +50,48 @@ void ObjLoader::Load(OLT::String file_path, OLT::Container<Vertex>& out_vertices
 	}
 }
 
-bool ObjLoader::Vertex::operator<(const Vertex & rhs)
+void ObjLoader::ReadPosition(OLT::StringStream & line)
+{
+	OLT::Vec3 temp_pos;
+	line >> temp_pos.x() >> temp_pos.y() >> temp_pos.z();
+	positions_.push_back(temp_pos);
+}
+
+void ObjLoader::ReadFace(OLT::StringStream & line)
+{
+	//faces can be specified in a multitude of formats:
+	// (legend)
+	// i -> position index
+	// t -> texture index
+	// n -> normal index
+	// (formats)
+	// 1. f i i i
+	// 2. f i/t i/t i/t
+	// 3. f i/t/n i/t/n i/t/n
+	// 4. f i//n i//n i//n
+	// we need to determine which we are dealing with
+	// indices can also be positive or negative, where positive is absolute 
+	// and negative is offset from the back
+	// indices are one-based
+
+	//for now, assume format one and only positive indices
+	while (!line.eof())
+	{
+		OLT::String block;
+		line >> block;
+
+		//make sure that we can deal with trailing whitespace and the like
+		if (block == "")
+			break;
+
+		int pos_idx = std::stoi(block);
+		Vertex vtx = { positions_[pos_idx - 1], OLT::Vec2(), OLT::Vec3() };
+
+		indices_.push_back(helper_.GetIndexByVertex(vtx));
+	}
+}
+
+bool ObjLoader::Vertex::operator<(const Vertex & rhs) const
 {
 	//we simply need to determine some kind of strong ordering,
 	//so we order by pos -> uv -> normal

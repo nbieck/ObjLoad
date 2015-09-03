@@ -8,6 +8,7 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <sstream>
 
 #include <Eigen\Dense>
 
@@ -15,6 +16,8 @@
 namespace ObjLoadTypes
 {
 	using InFile = std::ifstream;
+
+	using StringStream = std::istringstream;
 
 	template <typename T>
 	using Container = std::vector<T>;
@@ -40,7 +43,7 @@ public:
 		ObjLoadTypes::Vec3 normal;
 
 		//needed to determine duplicate vertices in the data
-		bool operator<(const Vertex& rhs);
+		bool operator<(const Vertex& rhs) const;
 	};
 
 	using Index = unsigned;
@@ -54,6 +57,10 @@ public:
 			  ObjLoadTypes::Container<Index>& out_indices);
 
 private:
+
+	void ReadPosition(ObjLoadTypes::StringStream& line);
+
+	void ReadFace(ObjLoadTypes::StringStream& line);
 
 	//.obj specifies different pieces of vertex data separately and can index them separately.
 	//these serve as intermediate storage
