@@ -84,8 +84,47 @@ void ObjLoader::ReadFace(OLT::StringStream & line)
 		if (block == "")
 			break;
 
-		int pos_idx = std::stoi(block);
-		indices_.push_back(helper_.GetIndexByVertex(MakeVertex(pos_idx, 0, 0)));
+		//determine which case we are dealing with by counting the slashes within the block
+		// none -> format 1
+		// 1 -> format 2
+		// 2 -> format 3 or 4
+		unsigned num_slashes = std::count(block.begin(), block.end(), '/');
+
+		if (num_slashes == 0)
+		{
+			int pos_idx = std::stoi(block);
+			indices_.push_back(helper_.GetIndexByVertex(MakeVertex(pos_idx, 0, 0)));
+		}
+		else if (num_slashes == 1)
+		{
+			OLT::StringStream blockstream(block);
+			int pos_idx, uv_idx;
+			char discard;
+			blockstream >> pos_idx >> discard >> uv_idx;
+			indices_.push_back(helper_.GetIndexByVertex(MakeVertex(pos_idx, uv_idx, 0)));
+		}
+		else if (num_slashes == 2)
+		{
+			//differentiate cases 3 and 4 through the presence of "//"
+			if (block.find("//") == OLT::String::npos)
+			{
+				//format 3
+				OLT::StringStream blockstream(block);
+				int pos_idx, uv_idx, normal_idx;
+				char discard;
+				blockstream >> pos_idx >> discard >> uv_idx >> discard >> normal_idx;
+				indices_.push_back(helper_.GetIndexByVertex(MakeVertex(pos_idx, uv_idx, normal_idx)));
+			}
+			else
+			{
+				//format 4
+				OLT::StringStream blockstream(block);
+				int pos_idx, normal_idx;
+				char discard;
+				blockstream >> pos_idx >> discard >> discard >> normal_idx;
+				indices_.push_back(helper_.GetIndexByVertex(MakeVertex(pos_idx, 0, normal_idx)));
+			}
+		}
 	}
 }
 
