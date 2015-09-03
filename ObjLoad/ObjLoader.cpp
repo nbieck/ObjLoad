@@ -9,6 +9,28 @@ namespace
 
 void ObjLoader::Load(OLT::String file_path, OLT::Container<Vertex>& out_vertices, OLT::Container<Index>& out_indices)
 {
+	OLT::InFile input(file_path);
+
+	if (input.is_open())
+	{
+		//first, reset all internal persistent storage to start new work (just to be safe)
+		positions_.clear();
+		uvs_.clear();
+		normals_.clear();
+		//we will be moving out of this, so just create a new one to be safe
+		indices_ = OLT::Container<Index>();
+		helper_ = LoadHelper();
+
+		//we go through the file line by line and then parse each line on its own
+
+		//for lines
+			//for token at start of line
+				//choose appropriate action
+
+		//last step: get results
+		out_vertices = helper_.GetVertexList();
+		out_indices = std::move(indices_);
+	}
 }
 
 bool ObjLoader::Vertex::operator<(const Vertex & rhs)
